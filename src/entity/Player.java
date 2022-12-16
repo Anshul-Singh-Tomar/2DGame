@@ -17,7 +17,8 @@ public class Player extends Entity{
     public final int screenX;
     public final int screenY;
     public int hasKey=0;
-
+    boolean moving = false;
+    int pixelCounter = 0;
 
     public Player(GamePanel gp,KeyHandler keyH){
         this.gp=gp;
@@ -26,12 +27,12 @@ public class Player extends Entity{
         screenY = gp.screenHeight/2 - (gp.tileSize/2 );
 
         solidArea = new Rectangle();
-        solidArea.x=8;
-        solidArea.y=16;
+        solidArea.x=1;
+        solidArea.y=1;
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
-        solidArea.width=32;
-        solidArea.height=32;
+        solidArea.width=46;
+        solidArea.height=46;
 
         setDefaultValues();
         getPlayerImage();
@@ -66,49 +67,55 @@ public class Player extends Entity{
         return Image;
     }
     public void update(){
-        if(keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed){
-            if(keyH.upPressed){
-                direction="up";
-            }
-            else if(keyH.downPressed){
-                direction="down";
-            }
-            else if(keyH.leftPressed){
-                direction="left";
-            }
-            else if(keyH.rightPressed){
-                direction="right";
-            }
-
-            // CHECK TILE COLLISION
-            collisionOn=false;
-            gp.cChecker.checkTile(this);
-
-            // CHECK OBJECT COLLISION
-            int objIndex = gp.cChecker.checkObject(this,true);
-            pickupObject(objIndex);
-
-            //IF COLLISION == FALSE, PLAYER CAN MOVE
-            if(!collisionOn){
-                switch (direction) {
-                    case "up" -> worldY -= speed;
-                    case "down" -> worldY += speed;
-                    case "left" -> worldX -= speed;
-                    case "right" -> worldX += speed;
+        if(!moving) {
+            if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
+                if (keyH.upPressed) {
+                    direction = "up";
+                } else if (keyH.downPressed) {
+                    direction = "down";
+                } else if (keyH.leftPressed) {
+                    direction = "left";
+                } else if (keyH.rightPressed) {
+                    direction = "right";
                 }
-            }
+                moving = true;
 
-            spriteCounter++;
-            if(spriteCounter>12){
-                if(spriteNum==1){
-                    spriteNum=2;
-                }
-                else if(spriteNum==2){
-                    spriteNum=1;
-                }
-                spriteCounter=0;
+                // CHECK TILE COLLISION
+                collisionOn = false;
+                gp.cChecker.checkTile(this);
+
+                // CHECK OBJECT COLLISION
+                int objIndex = gp.cChecker.checkObject(this, true);
+                pickupObject(objIndex);
             }
         }
+            if(moving == true){
+                //IF COLLISION == FALSE, PLAYER CAN MOVE
+                if(!collisionOn){
+                    switch (direction) {
+                        case "up" -> worldY -= speed;
+                        case "down" -> worldY += speed;
+                        case "left" -> worldX -= speed;
+                        case "right" -> worldX += speed;
+                    }
+                }
+
+                spriteCounter++;
+                if(spriteCounter>12){
+                    if(spriteNum==1){
+                        spriteNum=2;
+                    }
+                    else if(spriteNum==2){
+                        spriteNum=1;
+                    }
+                    spriteCounter=0;
+                }
+                pixelCounter +=speed;
+                if(pixelCounter == 48){
+                    moving = false;
+                    pixelCounter= 0;
+                }
+            }
     }
 
     public void pickupObject(int i){
@@ -136,7 +143,7 @@ public class Player extends Entity{
                     break;
                 case "Boots":
                     gp.playSE(2);
-                    speed +=3;
+                    speed +=4;
                     gp.obj[i]=null;
                     gp.ui.showMessage("Power Up!!!!");
                     break;
