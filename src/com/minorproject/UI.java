@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
 public class UI {
 
     GamePanel gp;
+    Graphics2D g2;
     Font fn,congo;
     BufferedImage keyImage;
     public boolean messageOn = false;
@@ -35,6 +36,16 @@ public class UI {
         messageOn = true;
     }
     public void draw(Graphics2D g2){
+
+        this.g2 = g2;
+        g2.setFont(fn);
+        g2.setColor(Color.white);
+        if(gp.gameState == gp.playState){
+            //DO play stuff later
+        }
+        if(gp.gameState == gp.pauseState){
+            drawPauseScreen();
+        }
         if(gameFinished){
 
             g2.setFont(fn);
@@ -93,5 +104,16 @@ public class UI {
                 }
             }
         }
+
+    }
+    public void drawPauseScreen(){
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN,80F));
+        String text = "PAUSED";
+        int x = getXForCenter(text),y = gp.screenHeight/2;
+        g2.drawString(text , x,y);
+    }
+    public int getXForCenter(String text){
+        int length = (int) g2.getFontMetrics().getStringBounds(text,g2).getWidth();
+        return gp.screenWidth/2 - length/2;
     }
 }
