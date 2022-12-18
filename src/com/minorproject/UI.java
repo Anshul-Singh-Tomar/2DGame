@@ -19,6 +19,7 @@ public class UI {
     int messageCounter = 0;
     public boolean gameFinished = false;
     public String currentDialogue = "";
+    public int commandNum = 0;
     double playTime;
     DecimalFormat dFormat = new DecimalFormat("#0.00");
 
@@ -52,6 +53,11 @@ public class UI {
         this.g2 = g2;
         g2.setFont(maruMonica);
         g2.setColor(Color.white);
+
+        //TITLE STATE
+        if(gp.gameState == gp.titleState){
+            drawTitleScreen();
+        }
 
         //PLAY STATE
         if(gp.gameState == gp.playState){
@@ -103,11 +109,15 @@ public class UI {
             gp.gameThread = null;
         }
         else{
-            g2.setFont(fn);
-            g2.setColor(Color.white);
-            g2.drawImage(keyImage, gp.tileSize/2,gp.tileSize/2,gp.tileSize,gp.tileSize,null);
-            g2.drawString("x "+ gp.player.hasKey,74,65);
 
+            // No. Of Keys
+            if(gp.gameState == gp.playState){
+                g2.setFont(fn);
+                g2.setColor(Color.white);
+                g2.drawImage(keyImage, gp.tileSize/2,gp.tileSize/2,gp.tileSize,gp.tileSize,null);
+                g2.drawString("x "+ gp.player.hasKey,74,65);
+
+            }
             // PLAY TIME
 //            playTime +=(double)1/60;
 //            g2.drawString("Time:"+dFormat.format(playTime),gp.tileSize * 11 ,65);
@@ -127,6 +137,51 @@ public class UI {
         }
 
     }
+
+    public void drawTitleScreen(){
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD,96F));
+        String text = "2-D Adventure Game";
+        int x = getXForCenter(text);
+        int y = gp.tileSize * 3;
+
+        //SHADOW
+        g2.setColor(Color.gray);
+        g2.drawString(text, x+5,y+5);
+
+        //MAIN COLOUR
+        g2.setColor(Color.white);
+        g2.drawString(text,x,y);
+
+        //BLUE BOY IMAGE
+        x= gp.screenWidth/2-gp.tileSize;
+        y+=gp.tileSize*1.5;
+        g2.drawImage(gp.player.down1,x,y,gp.tileSize *2,gp.tileSize*2,null);
+
+        //MENU
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD,48F));
+        text = "NEW GAME";
+        x = getXForCenter(text);
+        y +=gp.tileSize *4;
+        g2.drawString(text,x,y);
+        if(commandNum == 0){
+            g2.drawString(">",x-gp.tileSize,y);
+        }
+//        text = "LOAD GAME";
+//        x = getXForCenter(text);
+//        y +=gp.tileSize;
+//        g2.drawString(text,x,y);
+//        if(commandNum == 1){
+//            g2.drawString(">",x-gp.tileSize,y);
+//        }
+        text = "QUIT";
+        x = getXForCenter(text);
+        y +=gp.tileSize;
+        g2.drawString(text,x,y);
+        if(commandNum == 1){
+            g2.drawString(">",x-gp.tileSize,y);
+        }
+    }
+
     public void drawPauseScreen(){
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN,80F));
         String text = "PAUSED";
