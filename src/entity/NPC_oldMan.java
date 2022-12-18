@@ -13,6 +13,7 @@ public class NPC_oldMan extends Entity{
         speed = 1;
 
         getImage();
+        setDialogue();
     }
     public void getImage(){
         up1 = setup("npc/oldman_up_1");
@@ -24,6 +25,16 @@ public class NPC_oldMan extends Entity{
         right1 = setup("npc/oldman_right_1");
         right2 = setup("npc/oldman_right_2");
     }
+
+    public void setDialogue(){
+
+        dialogue[0] = "Hello, Traveler";
+        dialogue[1] = "There is some treasure around \n here on this island";
+        dialogue[2] = "There will be 3 doors on the way to\n the treasure, You need to find 3 keys \n to those doors";
+        dialogue[3] = "Good Luck";
+
+    }
+
     public void setAction(){
 
         actionLockCounter ++;
@@ -46,5 +57,9 @@ public class NPC_oldMan extends Entity{
             }
             actionLockCounter = 0;
         }
+    }
+
+    public void speak(){
+        super.speak();
     }
 }
